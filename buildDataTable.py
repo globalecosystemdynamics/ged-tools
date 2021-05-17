@@ -1,4 +1,9 @@
 #!/usr/bin/env python3.7
+
+# Author: Sergio Arturo Ruiz Gutierrez
+# Date: 16/05/2021
+# Description: Tool for building "initial" data table for GED project.
+
 import re
 import json
 import csv
@@ -64,7 +69,11 @@ def enumID(inputFile, outputFile):
 def generateCoolFile(jsonFinal):
     with open(jsonFinal, 'r', encoding='utf-8') as jsonFile:
         dataDic = json.load(jsonFile)
-    
+        for i in range(len(dataDic)):
+            for key in dataDic[i]:
+                if dataDic[i][key] == "":
+                    dataDic[i][key] = "NA"
+                    
     csvHeader = ['Response ID',
                  'Bloque', 
                  'Time Started', 
@@ -143,7 +152,7 @@ def generateCoolFile(jsonFinal):
                                        dataDic[res]['State/Region'], 
                                        dataDic[res]['Postal'], 
                                        dataDic[res]['Organization:Contact Information'],
-                                       "NA", 
+                                       "Falta Curar", 
                                        dataDic[res]['Full Name:Contact Information'], 
                                        dataDic[res]['Job title:Contact Information'], 
                                        dataDic[res]['Email:Contact Information'], 
@@ -161,7 +170,7 @@ def generateCoolFile(jsonFinal):
                                        "NA", 
                                        dataDic[res]["id_{}".format(j)], 
                                        dataDic[res]["id_{}".format(j + 1)],
-                                       "NA",
+                                       "Falta Curar",
                                        dataDic[res]["id_{}".format(j + 2)], 
                                        dataDic[res]["id_{}".format(j + 3)], 
                                        dataDic[res]["id_{}".format(j + 4)], 
@@ -172,10 +181,8 @@ def generateCoolFile(jsonFinal):
                                        dataDic[res]["id_{}".format(j + 9)], 
                                        dataDic[res]["id_{}".format(j + 10)]])
                     j = j + 11
-                    print("Principal i =", i)
                 else:
                     if '{}:Organization (extra):Additional collaborations'.format(i - 10)  in dataDic[res]:
-                        print("Encontro llave con i = ", i)
                         thewriter.writerow([dataDic[res]['Response ID'], 
                                            str(i), 
                                            dataDic[res]['Time Started'],
@@ -226,7 +233,6 @@ def generateCoolFile(jsonFinal):
                                            dataDic[res]['{}:Reason (success):Additional collaborations'.format(i - 10)],
                                            dataDic[res]['{}:Strength:Additional collaborations'.format(i - 10)]])
                     else:
-                        print("Paso a continue con i = ", i)
                         thewriter.writerow([dataDic[res]['Response ID'], 
                                            str(i), 
                                            dataDic[res]['Time Started'],
